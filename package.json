@@ -1,0 +1,18 @@
+{
+  "name": "get-dirtree",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "printDirectoryTree.js",
+  "scripts": {
+    "start": "node --watch test.js",
+    "test": "node test.js"
+  },
+  "keywords": [],
+  "author": "Sam Liebl",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {
+    "directory-tree": "3.5.2"
+  }
+}
