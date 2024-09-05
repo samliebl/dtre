@@ -1,12 +1,12 @@
 {
   "name": "get-dirtree",
   "version": "1.0.0",
-  "description": "",
+  "description": "Programmatically print a simple directory tree in plain text. It's just an easy way for me to get the format I like.",
   "type": "module",
   "main": "printDirectoryTree.js",
   "scripts": {
-    "start": "node --watch test.js",
-    "test": "node test.js"
+    "start": "node test.js",
+    "test": "node --watch test.js"
   },
   "keywords": [],
   "author": "Sam Liebl",
@@ -14,5 +14,9 @@
   "devDependencies": {},
   "dependencies": {
     "directory-tree": "3.5.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samliebl/get-dirtree.git"
   }
 }
