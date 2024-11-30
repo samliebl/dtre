@@ -1,3 +1,3 @@
-import { printDirectoryTree } from "./printDirectoryTree.js";
+import { printDirectoryTree } from "./index.js";
 
-printDirectoryTree("test", "dist/directoryTree.txt");
+printDirectoryTree('test');
