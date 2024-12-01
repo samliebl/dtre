@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-export function printDirectoryTree(directoryPath, style = 'default', outputPath = null) {
+export function printDirectoryTree(directoryPath = process.cwd(), style = 'default', outputPath = null) {
     // Function to recursively generate the directory tree object
     function buildTree(currentPath) {
         const stats = fs.statSync(currentPath);
