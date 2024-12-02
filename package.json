@@ -4,8 +4,12 @@
   "description": "Programmatically print a simple directory tree in plain text. It's just an easy way for me to get the format I like.",
   "type": "module",
   "main": "index.js",
+  "bin": {
+    "dtre": "./bin/dtre.js"
+  },
   "scripts": {
-    "test": "node --watch test.js"
+    "test": "node --watch test.js",
+    "start": "node bin/dtre.js"
   },
   "keywords": [],
   "author": "Sam Liebl",

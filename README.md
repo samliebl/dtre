@@ -32,6 +32,17 @@ printDirectoryTree('test', 'dist/directory_tree.txt');
             |-- a3.txt
 ```
 
+## CLI
+
+`dtre --directoryPath="assets"`
+`dtre -d assets`
+`dtre --style="default"`
+`dtre -s default`
+`dtre --outputPath="dir.txt"`
+`dtre -o dir.txt`
+`dtre --excludes="^[_\\.]"`
+`dtre -e "^[_\\.]"`
+
 ## LICENSE
 
 MIT &copy; Sam Liebl 2024.
