@@ -37,6 +37,7 @@ function parseArgs(args) {
                 options.excludes = args[++i];
                 break;
             case "--global":
+            case "-g":
                 options.useGlobalConfig = true;
                 break;
             default:
