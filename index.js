@@ -5,7 +5,7 @@ export function printDirectoryTree(directoryPath, style, outputPath, excludes) {
     // Ensure parameters have default values
     directoryPath = directoryPath || process.cwd(); // Default to current working directory
     style = ['default', 'backtick'].includes(style) ? style : 'default'; // Default to 'default' style
-    excludes = excludes ? new RegExp(excludes.replace(".", "\\.")) : /^\./; // Default to exclude hidden files
+    excludes = excludes ? new RegExp(excludes.replace(".", "\\.")) : null; // Default to no exclusions
     outputPath = outputPath || null; // Default to null if not provided
 
     // Function to recursively generate the directory tree object
@@ -13,8 +13,8 @@ export function printDirectoryTree(directoryPath, style, outputPath, excludes) {
         const stats = fs.statSync(currentPath);
         const name = path.basename(currentPath);
 
-        // Apply the exclusion pattern
-        if (excludes.test(name)) {
+        // Apply the exclusion pattern, if provided
+        if (excludes && excludes.test(name)) {
             return null;
         }
 
