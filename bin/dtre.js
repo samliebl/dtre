@@ -5,9 +5,14 @@ import path from "path";
 import fs from "fs";
 
 // Default global configuration path
+// This path points to the global config file in the user's home directory
 const globalConfigPath = path.join(process.env.HOME || process.env.USERPROFILE, ".config", "dtre.json");
 
-// Helper function to parse arguments
+/**
+ * Helper function to parse command-line arguments.
+ * @param {string[]} args - Command-line arguments.
+ * @returns {Object} Parsed options object with user-specified or default values.
+ */
 function parseArgs(args) {
     const options = {
         directoryPath: process.cwd(), // Default: current working directory
@@ -49,7 +54,11 @@ function parseArgs(args) {
     return options;
 }
 
-// Load configuration from a file
+/**
+ * Helper function to load configuration from a file.
+ * @param {boolean} useGlobalConfig - Whether to use the global configuration file.
+ * @returns {Object|null} Parsed configuration object or null if no file exists.
+ */
 function loadConfig(useGlobalConfig) {
     const configPath = useGlobalConfig ? globalConfigPath : path.resolve(process.cwd(), "dtre.json");
     if (fs.existsSync(configPath)) {
@@ -64,7 +73,7 @@ function loadConfig(useGlobalConfig) {
     return null; // No configuration file found
 }
 
-// Parse arguments
+// Parse CLI arguments
 const cliOptions = parseArgs(process.argv.slice(2));
 
 // Load configuration (global or local)
