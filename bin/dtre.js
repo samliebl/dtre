@@ -19,7 +19,8 @@ function parseArgs(args) {
         style: "default",            // Default: 'default' style
         outputPath: null,            // Default: print to console
         excludes: null,              // Default: no exclusions
-        useGlobalConfig: false       // Default: do not use global configuration
+        useGlobalConfig: false,      // Default: do not use global configuration
+        jsonOutput: false            // Default: no JSON output
     };
 
     for (let i = 0; i < args.length; i++) {
@@ -44,6 +45,10 @@ function parseArgs(args) {
             case "--global":
             case "-g":
                 options.useGlobalConfig = true;
+                break;
+            case "--json":
+            case "-j":
+                options.jsonOutput = true;
                 break;
             default:
                 console.error(`Unknown argument: ${arg}`);
@@ -84,7 +89,8 @@ const options = {
     directoryPath: cliOptions.directoryPath || config?.directoryPath || process.cwd(),
     style: cliOptions.style || config?.style || "default",
     outputPath: cliOptions.outputPath || config?.outputPath || null,
-    excludes: cliOptions.excludes ?? config?.excludes ?? null // Default to null if not provided
+    excludes: cliOptions.excludes ?? config?.excludes ?? null, // Default to null if not provided
+    jsonOutput: cliOptions.jsonOutput || config?.jsonOutput || false
 };
 
 // Execute the function
@@ -93,7 +99,8 @@ try {
         options.directoryPath,
         options.style,
         options.outputPath,
-        options.excludes
+        options.excludes,
+        options.jsonOutput
     );
 } catch (error) {
     console.error(`Error: ${error.message}`);

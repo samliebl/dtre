@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-export function printDirectoryTree(directoryPath, style, outputPath, excludes) {
+export function printDirectoryTree(directoryPath, style, outputPath, excludes, jsonOutput = false) {
     // Ensure parameters have default values
     directoryPath = directoryPath || process.cwd(); // Default to current working directory
     style = ['default', 'backtick'].includes(style) ? style : 'default'; // Default to 'default' style
@@ -24,10 +24,10 @@ export function printDirectoryTree(directoryPath, style, outputPath, excludes) {
                 .map((child) => buildTree(path.join(currentPath, child)))
                 .filter(Boolean); // Remove null entries (excluded files/folders)
 
-            return { path: currentPath, name, children };
+            return { name, type: 'directory', children };
         }
 
-        return { path: currentPath, name }; // Return file
+        return { name, type: 'file' }; // Return file
     }
 
     // Function to generate the tree string with proper formatting
@@ -64,25 +64,48 @@ export function printDirectoryTree(directoryPath, style, outputPath, excludes) {
         throw new Error('The directory could not be read or is empty.');
     }
 
-    // Generate tree string starting from the root
-    const treeString = `.\n${generateTreeString(tree)}`;
+    if (jsonOutput) {
+        // If JSON output is enabled, serialize the tree as JSON
+        const jsonString = JSON.stringify(tree, null, 2);
 
-    if (outputPath) {
-        // Ensure the output directory exists
-        const distDir = path.resolve(outputPath);
-        const distDirPath = path.dirname(distDir);
-        if (!fs.existsSync(distDirPath)) {
-            fs.mkdirSync(distDirPath, { recursive: true });
+        if (outputPath) {
+            // Write JSON output to the specified file
+            const distDir = path.resolve(outputPath);
+            const distDirPath = path.dirname(distDir);
+            if (!fs.existsSync(distDirPath)) {
+                fs.mkdirSync(distDirPath, { recursive: true });
+            }
+
+            fs.writeFileSync(outputPath, jsonString);
+
+            console.log(`
+Directory tree (JSON) written to:
+${outputPath}`);
+        } else {
+            // Print JSON to console
+            console.log(jsonString);
         }
+    } else {
+        // Generate tree string starting from the root
+        const treeString = `.\n${generateTreeString(tree)}`;
 
-        // Write the tree string to the specified output path
-        fs.writeFileSync(outputPath, treeString);
+        if (outputPath) {
+            // Ensure the output directory exists
+            const distDir = path.resolve(outputPath);
+            const distDirPath = path.dirname(distDir);
+            if (!fs.existsSync(distDirPath)) {
+                fs.mkdirSync(distDirPath, { recursive: true });
+            }
 
-        console.log(`
+            // Write the tree string to the specified output path
+            fs.writeFileSync(outputPath, treeString);
+
+            console.log(`
 Directory tree printed to:
 ${outputPath}`);
-    } else {
-        // Print tree to console
-        console.log(treeString);
+        } else {
+            // Print tree to console
+            console.log(treeString);
+        }
     }
 }
