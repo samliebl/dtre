@@ -1,5 +1,5 @@
 {
-  "name": "@samliebl/get-dirtree",
+  "name": "dtre",
   "version": "1.2.0",
   "description": "Programmatically print a simple directory tree in plain text. It's just an easy way for me to get the format I like.",
   "type": "module",
