@@ -13,6 +13,7 @@ const globalConfigPath = path.join(process.env.HOME || process.env.USERPROFILE, 
  * @param {string[]} args - Command-line arguments.
  * @returns {Object} Parsed options object with user-specified or default values.
  */
+
 function parseArgs(args) {
     const options = {
         directoryPath: process.cwd(), // Default: current working directory
@@ -20,7 +21,8 @@ function parseArgs(args) {
         outputPath: null,            // Default: print to console
         excludes: null,              // Default: no exclusions
         useGlobalConfig: false,      // Default: do not use global configuration
-        jsonOutput: false            // Default: no JSON output
+        jsonOutput: false,           // Default: no JSON output
+        overview: false              // Default: no overview output
     };
 
     for (let i = 0; i < args.length; i++) {
@@ -50,6 +52,10 @@ function parseArgs(args) {
             case "-j":
                 options.jsonOutput = true;
                 break;
+            case "--overview":
+            case "-w":
+                options.overview = true;
+                break;
             default:
                 console.error(`Unknown argument: ${arg}`);
                 process.exit(1);
@@ -64,6 +70,7 @@ function parseArgs(args) {
  * @param {boolean} useGlobalConfig - Whether to use the global configuration file.
  * @returns {Object|null} Parsed configuration object or null if no file exists.
  */
+
 function loadConfig(useGlobalConfig) {
     const configPath = useGlobalConfig ? globalConfigPath : path.resolve(process.cwd(), "dtre.json");
     if (fs.existsSync(configPath)) {
@@ -89,19 +96,33 @@ const options = {
     directoryPath: cliOptions.directoryPath || config?.directoryPath || process.cwd(),
     style: cliOptions.style || config?.style || "default",
     outputPath: cliOptions.outputPath || config?.outputPath || null,
-    excludes: cliOptions.excludes ?? config?.excludes ?? null, // Default to null if not provided
-    jsonOutput: cliOptions.jsonOutput || config?.jsonOutput || false
+    excludes: cliOptions.excludes ?? config?.excludes ?? null, 
+    // Default to null if not provided
+    jsonOutput: cliOptions.jsonOutput || config?.jsonOutput || false,
+    overview: cliOptions.overview || false 
+    // Pass overview option
 };
 
 // Execute the function
 try {
-    printDirectoryTree(
-        options.directoryPath,
-        options.style,
-        options.outputPath,
-        options.excludes,
-        options.jsonOutput
-    );
+    if (options.overview) {
+        printDirectoryTree(
+            options.directoryPath,
+            options.style,
+            options.outputPath,
+            options.excludes,
+            true, // JSON output is always true for overview
+            true // Pass true to trigger overview functionality
+        );
+    } else {
+        printDirectoryTree(
+            options.directoryPath,
+            options.style,
+            options.outputPath,
+            options.excludes,
+            options.jsonOutput
+        );
+    }
 } catch (error) {
     console.error(`Error: ${error.message}`);
     process.exit(1);

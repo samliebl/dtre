@@ -1,19 +1,32 @@
-# Directory Tree
+# dtre: Directory Tree
+
+`/ˈditriː/`
 
 Programmatically print a simple directory tree in plain text. It's just an easy way for me to get the format I like.
+
+1. Usage
+    1. Module
+    1. Command-line Interface (CLI)
 
 ## Features
 
 - **Recursive Tree Generation**: Prints directory structure recursively.
 - **Exclusion Support**: Exclude files or folders using regex patterns.
 - **Custom Styles**: Supports `default` and `backtick` formatting styles.
-- **Output Options**: Prints to console or writes to a file.
-- **Configuration Files**: Supports local (`dtre.json`) and global (`~/.config/dtre.json`) configuration.
+- **Output Options**:
+    - Prints raw text output to `--stdout`
+    - Writes to a file
+    - JSON
+- **Configuration Files**:
+    - Supports local (`dtre.json`) and
+    - global (`~/.config/dtre.json`) configuration.
 - **CLI Options**: Override configuration with command-line arguments.
 
-## Usage
+---
 
-### Import as a Module
+<h2>Usage</h2>
+
+<h3>Import as a module</h3>
 
 Module exports a function `printDirectoryTree(dir, style, outputPath, excludes)` where:
 - `dir` is the directory for which you want the tree.
@@ -39,7 +52,13 @@ This generates a file `./dist/directory_tree.txt` with content like:
         `-- file2.txt
 ```
 
-### CLI
+<h3>Command-line Interface (CLI)</h3>
+
+Import the global npm package:
+
+```bash
+$ npm install --global dtre
+```
 
 Command-line interface supports various options:
 
@@ -63,9 +82,15 @@ $ dtre -e "^[_\\.]"
 # Use a global configuration file
 $ dtre --global
 $ dtre -g
+
+# Output JSON with file content and metadata (overview mode)
+$ dtre --overview
+$ dtre -w
 ```
 
-### Configuration Files
+<h4>Configuration files</h4>
+
+<h5>Local configuration (`pwd/dtre.json`)</h5>
 
 #### Local Configuration (`dtre.json`)
 Place a `dtre.json` file in the current working directory. Example:
@@ -79,7 +104,8 @@ Place a `dtre.json` file in the current working directory. Example:
 }
 ```
 
-#### Global Configuration (`~/.config/dtre.json`)
+<h5>Global Configuration (`~/.config/dtre.json`)</h5>
+
 Create a global configuration file in `~/.config/dtre.json`. Example:
 
 ```json
@@ -91,7 +117,7 @@ Create a global configuration file in `~/.config/dtre.json`. Example:
 }
 ```
 
-To use the global configuration, run with the `--global` or `-g` flag.
+<mark>Important</mark>: To use the global configuration, run with the `--global` or `-g` flag.
 
 ## LICENSE
 

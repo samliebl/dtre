@@ -1,1 +1,3 @@
 a3
+
+Text of: /test/a3.txt
