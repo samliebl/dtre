@@ -6,16 +6,18 @@ import path from 'path';
  * @param {string} directoryPath - The root directory path.
  * @param {string} style - Formatting style for tree output.
  * @param {string|null} outputPath - Output file path for the tree.
- * @param {RegExp|null} excludes - Exclusion pattern for files and directories.
+ * @param {RegExp|string|null} excludes - Exclusion pattern for files and directories.
  * @param {boolean} jsonOutput - Whether to output JSON.
  * @param {boolean} overview - Whether to include file metadata in JSON output.
  */
 
-export function printDirectoryTree(directoryPath, style, outputPath, excludes, jsonOutput = false, overview = false) {
-    directoryPath = directoryPath || process.cwd(); 
-    // Default to current working directory
-    excludes = excludes ? new RegExp(excludes.replace(".", "\\.")) : null; 
-    // Default to no exclusions
+export function printDirectoryTree(directoryPath, style = 'default', outputPath = null, excludes = null, jsonOutput = false, overview = false) {
+    // Ensure parameters have default values
+    directoryPath = directoryPath || process.cwd(); // Default to current working directory
+    style = ['default', 'backtick'].includes(style) ? style : 'default'; // Default to 'default' style
+    if (excludes && !(excludes instanceof RegExp)) {
+        excludes = new RegExp(excludes.replace(/\./g, "\\.")); // Convert to RegExp if it's a string
+    }
 
     // Function to recursively generate the directory tree object
     function buildTree(currentPath) {
@@ -31,25 +33,49 @@ export function printDirectoryTree(directoryPath, style, outputPath, excludes, j
             const children = fs
                 .readdirSync(currentPath)
                 .map((child) => buildTree(path.join(currentPath, child)))
-                .filter(Boolean); 
-                // Remove null entries (excluded files/folders)
+                .filter(Boolean); // Remove null entries (excluded files/folders)
 
             return { name, type: 'directory', children };
         } else {
             const file = { name, type: 'file' };
             if (overview) {
-                file.extension = path.extname(name).slice(1); 
-                // Get file extension without the dot
+                file.extension = path.extname(name).slice(1); // Get file extension without the dot
                 try {
-                    file.content = fs.readFileSync(currentPath, "utf-8"); 
-                    // Read file content
+                    file.content = fs.readFileSync(currentPath, "utf-8"); // Read file content
                 } catch (err) {
-                    file.content = null; 
-                    // Handle unreadable files gracefully
+                    file.content = null; // Handle unreadable files gracefully
                 }
             }
             return file;
         }
+    }
+
+    // Function to generate the tree string with proper formatting
+    function generateTreeString(tree, depth = 0, isLast = true, prefix = '') {
+        let treeString = '';
+
+        const isDirectory = tree.children && tree.children.length > 0;
+        const name = isDirectory ? `${tree.name}/` : tree.name;
+
+        // Add branch symbols based on style
+        const branch =
+            style === 'backtick'
+                ? isLast
+                    ? '`-- '
+                    : '|-- '
+                : '|-- '; // Default style uses '|-- ' for all items
+
+        treeString += `${prefix}${branch}${name}\n`;
+
+        if (tree.children) {
+            const newPrefix = prefix + (isLast ? '    ' : '|   ');
+            tree.children.forEach((child, index) => {
+                const isLastChild = index === tree.children.length - 1;
+                treeString += generateTreeString(child, depth + 1, isLastChild, newPrefix);
+            });
+        }
+
+        return treeString;
     }
 
     // Build the tree structure starting from the given directory
@@ -72,7 +98,8 @@ export function printDirectoryTree(directoryPath, style, outputPath, excludes, j
             console.log(jsonString);
         }
     } else {
-        const treeString = `.\n${generateTreeString(tree)}`;
+        const treeString = `.
+${generateTreeString(tree)}`;
         if (outputPath) {
             const distDir = path.resolve(outputPath);
             const distDirPath = path.dirname(distDir);
